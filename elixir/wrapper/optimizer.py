@@ -24,7 +24,7 @@ class OptimState(Enum):
     UNSCALED = 1
 
 
-class ElixirOptimizer(colo_optim.FusedAdam):
+class ElixirOptimizer(colo_optim.HybridAdam):
     """A wrapper for optimizers. Users should notice that one specific ElixirOptimizer is strictly
     corresponding to one ElixirModule. Currently only a group of optimizers are supported in ElixirOptimizer.
     The reason is that ElixirOptimizer only support element-wise optimizers now.
