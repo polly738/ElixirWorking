@@ -109,9 +109,8 @@ def main():
 
     # wrap your model and optimizer
     model = ElixirModule(model, sr, global_group, prefetch=True, dtype=torch.float16)
-    param_groups = [{'params': p} for p in model.parameters()]
-    base_optimizer = HybridAdam(param_groups)
-    optimizer = ElixirOptimizer(model, optimizer=HybridAdam, initial_scale=32)
+    base_optimizer = HybridAdam(model.parameters())
+    optimizer = ElixirOptimizer(model, base_optimizer.param_groups, initial_scale=32)
 
     logger.info(get_mem_info(prefix='After Elixir initialization: '), ranks=[0])
 
