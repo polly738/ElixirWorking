@@ -24,7 +24,7 @@ class OptimState(Enum):
     UNSCALED = 1
 
 
-class ElixirOptimizer(colo_optim.HybridAdam):
+class ElixirOptimizer(colo_optim.ColossalaiOptimizer):
     """A wrapper for optimizers. Users should notice that one specific ElixirOptimizer is strictly
     corresponding to one ElixirModule. Currently only a group of optimizers are supported in ElixirOptimizer.
     The reason is that ElixirOptimizer only support element-wise optimizers now.
@@ -44,6 +44,7 @@ class ElixirOptimizer(colo_optim.HybridAdam):
                  backoff_factor: float = 0.5,
                  growth_interval: int = 1000,
                  hysteresis: int = 2,
+
                  max_scale: float = 2**24,
                  max_norm: float = 0.0,
                  norm_type: float = 2.0,
