@@ -35,22 +35,31 @@ class ElixirOptimizer(colo_optim.ColossalaiOptimizer):
         module: The nn.Module instance wrapped as an ElixirModule.
     """
 
+
+class ElixirOptimizer(colo_optim.HybridAdam):
     def __init__(self,
                  module: ElixirModule,
-                 optimizer: torch.optim.Optimizer,
+                 optimizer: torch.optim.Optimizer = colo_optim.HybridAdam,
                  initial_scale: float = 32768,
                  min_scale: float = 1,
                  growth_factor: float = 2,
                  backoff_factor: float = 0.5,
                  growth_interval: int = 1000,
                  hysteresis: int = 2,
-
                  max_scale: float = 2**24,
                  max_norm: float = 0.0,
                  norm_type: float = 2.0,
                  init_step=False):
-
-        super().__init__(optimizer)
+        
+        # Always use HybridAdam for optimizer
+        optimizer = colo_optim.HybridAdam
+        
+        # Now initialize the parent (HybridAdam)
+        super().__init__(module, optimizer=optimizer, initial_scale=initial_scale, 
+                         min_scale=min_scale, growth_factor=growth_factor, 
+                         backoff_factor=backoff_factor, growth_interval=growth_interval, 
+                         hysteresis=hysteresis, max_scale=max_scale, 
+                         max_norm=max_norm, norm_type=norm_type, init_step=init_step)
         assert isinstance(module, ElixirModule)
         self.scaled_optimizer = False
         if type(optimizer) in _AVAIL_OPTIM_LIST:
