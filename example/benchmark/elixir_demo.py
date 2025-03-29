@@ -109,9 +109,11 @@ def main():
 
     # wrap your model and optimizer
     model = ElixirModule(model, sr, global_group, prefetch=True, dtype=torch.float16)
-    base_optimizer = HybridAdam(model.parameters())
-    optimizer = ElixirOptimizer(model, base_optimizer.param_groups, initial_scale=32)
+    params = list(model.parameters())  # Explicitly get all parameters as a list
+    base_optimizer = HybridAdam(params)  
 
+    # Create ElixirOptimizer with the model and base_optimizer
+    optimizer = ElixirOptimizer(model, optimizer=base_optimizer, initial_scale=32)
     logger.info(get_mem_info(prefix='After Elixir initialization: '), ranks=[0])
 
     # print model size
