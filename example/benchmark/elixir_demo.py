@@ -83,7 +83,7 @@ def main():
 
     # build GPT model
     model = get_model(args.model_name)
-    model.gradient_checkpointing_enable()
+    # model.gradient_checkpointing_enable()
 
     # build a highly optimized gpu/cpu optimizer
     optimizer = HybridAdam(model.parameters(), lr=1e-3)
