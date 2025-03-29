@@ -1,6 +1,7 @@
 import os
 from functools import partial
 from time import time
+import argparse
 
 import colossalai
 import torch
@@ -17,7 +18,14 @@ from example.common.utils import fake_gpt_data, get_mem_info, get_profile_contex
 
 
 def parse_args():
-    parser = colossalai.get_default_parser()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", type=str, help="path to the config file")
+    parser.add_argument("--host", type=str, help="the master address for distributed training")
+    parser.add_argument("--port", type=int, help="the master port for distributed training")
+    parser.add_argument("--world_size", type=int, help="world size for distributed training")
+    parser.add_argument("--rank", type=int, help="rank for the default process group")
+    parser.add_argument("--local_rank", type=int, help="local rank on the node")
+    parser.add_argument("--backend", type=str, default="nccl", help="backend for distributed communication")
     parser.add_argument(
         '--batch_size',
         type=int,
