@@ -6,7 +6,6 @@ import argparse
 import colossalai
 import torch
 import torch.distributed as dist
-import torch.optim.Optimizier as optim
 from colossalai.logging import disable_existing_loggers, get_dist_logger
 from colossalai.nn.optimizer import HybridAdam
 
@@ -108,14 +107,10 @@ def main():
         inp=input_dict,
         step_fn=fwd_bwd_step)
 
-    # wrap your model 
+    # wrap your model and optimizer
     model = ElixirModule(model, sr, global_group, prefetch=True, dtype=torch.float16)
-
-    # Create base optimizer with model parameters
-    base_optimizer = HybridAdam(model.parameters())
-
-    # Create ElixirOptimizer with base_optimizer only
-    optimizer = ElixirOptimizer(base_optimizer, initial_scale=32)
+    base_optimizer = HybridAdam(model.parameters())  # First create base optimizer
+    optimizer = ElixirOptimizer(model, optimizer=base_optimizer, initial_scale=32)
 
     logger.info(get_mem_info(prefix='After Elixir initialization: '), ranks=[0])
 
