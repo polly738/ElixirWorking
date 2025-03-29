@@ -110,7 +110,7 @@ def main():
 
     optimizer = ElixirOptimizer(
         model, 
-        optim_cls=HybridAdam,  # Pass the class, not an instance
+        HybridAdam,  # Pass the class, not an instance
         initial_scale=32,
         lr=1e-3  # Pass optimizer arguments here
     )
