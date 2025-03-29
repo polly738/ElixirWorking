@@ -85,7 +85,6 @@ def main():
     model = get_model(args.model_name)
     # model.gradient_checkpointing_enable()
 
-    # build a highly optimized gpu/cpu optimizer
     optimizer = HybridAdam(model.parameters(), lr=1e-3)
 
     input_ids, attn_mask = fake_gpt_data(BATCH_SIZE, SEQ_LEN, VOCAB_SIZE)
@@ -107,9 +106,14 @@ def main():
         inp=input_dict,
         step_fn=fwd_bwd_step)
 
-    # wrap your model and optimizer
     model = ElixirModule(model, sr, global_group, prefetch=True, dtype=torch.float16)
-    optimizer = ElixirOptimizer(model, optimizer, initial_scale=32)
+
+    optimizer = ElixirOptimizer(
+        model, 
+        optim_cls=HybridAdam,  # Pass the class, not an instance
+        initial_scale=32,
+        lr=1e-3  # Pass optimizer arguments here
+    )
 
     logger.info(get_mem_info(prefix='After Elixir initialization: '), ranks=[0])
 
