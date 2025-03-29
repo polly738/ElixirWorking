@@ -28,7 +28,7 @@ def profile_optimal_search():
         loss = model_in(**inp_in)
         loss.backward()
 
-    model.gradient_checkpointing_enable()
+    # model.gradient_checkpointing_enable()
     sr = optimal_search(model, 4, unified_dtype=torch.float16, overlap=True, verbose=True, inp=data, step_fn=train_step)
 
 
